@@ -438,7 +438,7 @@ header .nav .dropdown .dropdown-content {
   z-index: 1;
   padding: 12px 0;
   border-radius: 10px;
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
 /* Links inside the dropdown */

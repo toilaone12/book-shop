@@ -287,14 +287,10 @@
 .image-book {
     height: 100%;
     object-fit: cover;
-    width: 272px;
+    width: 100%;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
-    transition: transform 0.5s ease;
-}
-
-.image-book:hover {
-    transform: scale(1.1);
+    display: block;
 }
 
 .price-font {
@@ -319,26 +315,42 @@
     text-align: center;
 }
 
+.card-book {
+    position: relative;
+    overflow: hidden;
+}
+
 .btn-hover-function {
     position: absolute;
-    bottom: 100%;
-    right: 22%;
+    bottom: -100%;
+    left: 0;
     width: 100%;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: bottom 0.5s ease-in-out;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 6px;
+    transition: bottom 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    opacity: 0;
     z-index: 10;
+    pointer-events: none;
+    padding-top: 125px;
 }
 
+
 .card-book:hover .btn-hover-function {
-    bottom: 59%; /* Move to the top of the card on hover */
+    bottom: 0;
+    opacity: 1;
+    pointer-events: auto;
+    border-radius: 6px;
 }
 
 .btn-function {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
 }
 
 .btn-add-cart {
@@ -351,6 +363,7 @@
     background-color: #9a3324;
     padding: 9px 20px 8px !important;
     border-radius: 10px;
+    margin-left: 5px;
 }
 
 .btn-add-cart i {
@@ -371,11 +384,103 @@
     margin-right: 5px !important;
     margin-top: 0 !important;
     margin-bottom: 0 !important;
-    margin-left: 0 !important;
+    margin-left: 5px !important;
 }
 
 .btn-detail:hover,
 .btn-add-cart:hover {
     background-color: #f8b02d;
     color: #9a3324 !important;
+}
+
+.container-book {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.container-book h3 {
+    text-align: center;
+    font-size: 33px;
+}
+
+.form-group label {
+    font-size: 14px;
+}
+
+.form-control-book {
+    margin-top: .5rem;
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    padding: 13px 13px;
+    font-size: 15px;
+    color: black;
+    display: block;
+    border: none;
+    outline: none;
+}
+
+/* styles.css */
+.custom-file {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: 2.5rem;
+    margin-bottom: 0.5rem;
+    margin-top: .5rem;
+}
+
+.custom-file-input {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 2.5rem;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.custom-file-label {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1;
+    height: 2.5rem;
+    padding: 0.5rem 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.custom-file-label::after {
+    content: "Browse";
+    position: relative;
+    right: -16px;
+    height: 1.5rem;
+    padding: 0.5rem 1rem;
+    background-color: #007bff;
+    border-left: 1px solid #ced4da;
+    border-radius: 0 0.25rem 0.25rem 0;
+    color: #fff;
+    display: inline-block;
+}
+
+.small {
+    font-size: 14px;
+}
+
+.overflow-auto {
+    overflow: auto;
+}
+
+.mb-20 {
+    margin-bottom: 20px;
 }

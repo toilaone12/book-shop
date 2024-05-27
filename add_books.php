@@ -10,8 +10,8 @@ if (!isset($admin_id)) {
 };
 
 if (isset($_POST['add_books'])) {
-   $bname = mysqli_real_escape_string($conn, $_POST['bname']);
-   $btitle = mysqli_real_escape_string($conn, $_POST['btitle']);
+   $name = mysqli_real_escape_string($conn, $_POST['name']);
+   $author = mysqli_real_escape_string($conn, $_POST['author']);
    $category = mysqli_real_escape_string($conn, $_POST['Category']);
    $price = $_POST['price'];
    $desc = mysqli_real_escape_string($conn, ($_POST['bdesc']));
@@ -21,11 +21,12 @@ if (isset($_POST['add_books'])) {
    $audio = $_FILES["audio"]["name"];
    $temp_audio = $_FILES['audio']['tmp_name'];
    $filenames = './audio_books/' . $audio;
+   $date = date('Y-m-d H:i:s');
 
-   if (empty($bname)) {
+   if (empty($name)) {
       $message[] = 'Please Enter book name';
-   } elseif (empty($btitle)) {
-      $message[] = 'Please Enter book title';
+   } elseif (empty($author)) {
+      $message[] = 'Please Enter author';
    } elseif (empty($price)) {
       $message[] = 'Please Enter book price';
    } elseif (empty($category)) {
@@ -35,8 +36,7 @@ if (isset($_POST['add_books'])) {
    } elseif (empty($img)) {
       $message[] = 'Please Choose Image';
    } else {
-
-      $add_book = mysqli_query($conn, "INSERT INTO book_info(`name`, `title`, `price`, `category`, `description`, `image`, `audio`) VALUES('$bname','$btitle','$price','$category','$desc','$img', '$audio')") or die('Query failed');
+      $add_book = mysqli_query($conn, "INSERT INTO book_info VALUES('','$name','$author','$price','$category','$desc','$img', '$audio', '$date')") or die('Query failed');
 
       if ($add_book) {
          move_uploaded_file($temp_audio, $filenames);
@@ -48,52 +48,6 @@ if (isset($_POST['add_books'])) {
    }
 }
 
-if (isset($_GET['delete'])) {
-   $delete_id = $_GET['delete'];
-   mysqli_query($conn, "DELETE FROM `book_info` WHERE bid = '$delete_id'") or die('query failed');
-   header('location:add_books.php');
-}
-
-
-if (isset($_POST['update_product'])) {
-
-   $update_p_id = $_POST['update_p_id'];
-   $update_name = $_POST['update_name'];
-   $update_title = $_POST['update_title'];
-   $update_description = $_POST['update_description'];
-   $update_price = $_POST['update_price'];
-
-   mysqli_query($conn, "UPDATE `book_info` SET name = '$update_name', title='$update_title', description ='$update_description', price = '$update_price',category='$update_category' WHERE bid = '$update_p_id'") or die('query failed');
-
-   $update_image = $_FILES['update_image']['name'];
-   $update_image_tmp_name = $_FILES['update_image']['tmp_name'];
-   $update_image_size = $_FILES['update_image']['size'];
-   $update_folder = './added_books/' . $update_image;
-   $update_old_image = $_POST['update_old_image'];
-   $update_old_audio = $_POST['update_old_audio'];
-   $update_audio = $_FILES['update_audio']['name'];
-   $update_audio_tmp = $_FILES['update_audio']['tmp_name'];
-   $update_audio_folder = './audio_books/' . $update_audio;
-   if (!empty($update_image)) {
-      if ($update_image_size > 2000000) {
-         $message[] = 'image file size is too large';
-      } else {
-         mysqli_query($conn, "UPDATE `book_info` SET image = '$update_image' WHERE bid = '$update_p_id'") or die('query failed');
-         move_uploaded_file($update_image_tmp_name, $update_folder);
-         unlink('uploaded_img/' . $update_old_image);
-      }
-   }
-   if (!empty($update_audio)) {
-      mysqli_query($conn, "UPDATE `book_info` SET audio = '$update_audio' WHERE bid = '$update_p_id'") or die('query failed');
-      move_uploaded_file($update_audio_tmp, $update_audio_folder);
-      if ($update_old_audio) {
-         unlink('uploaded_img/' . $update_old_audio);
-      }
-   }
-
-   header('location:./add_books.php');
-}
-
 ?>
 
 <!DOCTYPE html>
@@ -103,10 +57,10 @@ if (isset($_POST['update_product'])) {
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <link rel="stylesheet" href="./css/register.css">
    <link rel="stylesheet" href="./css/admin.css">
+   <link rel="stylesheet" href="./css/register.css">
+   <link rel="stylesheet" href="./css/custom.css">
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
    <title>Add Books</title>
 </head>
 
@@ -127,123 +81,84 @@ if (isset($_POST['update_product'])) {
          ?>
       
          <a class="update_btn" style="position: fixed ; z-index:100;" href="total_books.php">See All Books</a>
-         <div class="container_box">
+         <div class="container-book">
             <form action="" method="POST" enctype="multipart/form-data">
                <h3>Add Books To <a href="index.php"><span>MuseBook & </span><span>Chill</span></a></h3>
-               <input type="text" name="bname" placeholder="Enter book Name" class="text_field ">
-               <input type="text" name="btitle" placeholder="Enter Author name" class="text_field">
-               <input type="number" min="0" name="price" class="text_field" placeholder="enter product price">
-               <select name="Category" id="" required class="text_field">
-                  <option value="Adventure">Adventure</option>
-                  <option value="Magic">Magic</option>
-                  <option value="knowledge">knowledge</option>
-               </select>
-               <textarea name="bdesc" placeholder="Enter book description" id="" class="text_field" cols="18" rows="5"></textarea>
-               <input type="file" name="image" accept="image/jpg, image/jpeg, image/png" class="text_field">
-               <input type="file" name="audio" accept="audio/mp3" class="text_field">
-               <input type="submit" value="Add Book" name="add_books" class="btn text_field">
+               <div class="row" style="margin-top: 50px;">
+                  <div class="col-6">
+                     <div class="form-group">
+                        <label for="">Book Name</label>
+                        <input type="text" name="name" placeholder="Enter Book Name" class="form-control-book">
+                     </div>
+                  </div>
+                  <div class="col-6">
+                     <div class="form-group">
+                        <label for="">Author Name</label>
+                        <input type="text" name="author" placeholder="Enter Author Name" class="form-control-book">
+                     </div>
+                  </div>
+                  <div class="col-6">
+                     <div class="form-group">
+                        <label for="">Price</label>
+                        <input type="number" min="0" name="price" placeholder="Enter Price" class="form-control-book">
+                     </div>
+                  </div>
+                  <div class="col-3">
+                     <div class="form-group">
+                        <label for="">Category</label>
+                        <select name="Category" id="" required class="form-control-book">
+                           <?php
+                              $listParent = $conn->query("SELECT * FROM category WHERE id_parent = 0");
+                              while($oneParent = $listParent->fetch_assoc()){
+                           ?>
+                           <option value="<?=$oneParent['id_category']?>"><?=$oneParent['name']?></option>
+                           <?php
+                              $listChild = $conn->query("SELECT * FROM category WHERE id_parent = ".$oneParent['id_category']);
+                              while($oneChild = $listChild->fetch_assoc()){
+                           ?>
+                           <option value="<?=$oneChild['id_category']?>">|---<?=$oneChild['name']?></option>
+                           <?php
+                              }
+                           ?>
+                           <?php
+                              }
+                           ?>
+                        </select>
+                     </div>
+                  </div>
+                  <div class="col-6">
+                     <div class="form-group">
+                        <label for="">Description</label>
+                        <textarea name="bdesc" placeholder="Enter book description" id="" class="form-control-book" cols="18" rows="5"></textarea>
+                     </div>
+                  </div>
+                  <div class="col-6">
+                     <div class="row">
+                        <div class="col-12">
+                           <div class="form-group">
+                              <label for="" class="form-label">Image</label>
+                              <div class="custom-file">
+                                 <input type="file" name="image" accept="image/jpg, image/jpeg, image/png" class="custom-file-input">
+                                 <label for="" class="custom-file-label">Chose file</label>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="col-12">
+                           <div class="form-group">
+                              <label for="" class="form-label">Audio</label>
+                              <div class="custom-file">
+                              <label for="">Audio</label>
+                                 <input type="file" name="audio" accept="audio/mp3" class="custom-file-input" style="top: -18px;">
+                                 <label for="" class="custom-file-label">Chose file</label>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <input type="submit" value="Submit" name="add_books" class="btn btn-primary">
             </form>
          </div>
-      
-         <section class="edit-product-form">
-      
-            <?php
-            if (isset($_GET['update'])) {
-               $update_id = $_GET['update'];
-               $update_query = mysqli_query($conn, "SELECT * FROM `book_info` WHERE bid = '$update_id'") or die('query failed');
-               if (mysqli_num_rows($update_query) > 0) {
-                  while ($fetch_update = mysqli_fetch_assoc($update_query)) {
-            ?>
-                     <form action="" method="post" enctype="multipart/form-data">
-                        <input type="hidden" name="update_p_id" value="<?php echo $fetch_update['bid']; ?>">
-                        <input type="hidden" name="update_old_image" value="<?php echo $fetch_update['image']; ?>">
-                        <input type="hidden" name="update_old_audio" value="<?php echo $fetch_update['audio']; ?>">
-                        <img src="./added_books/<?php echo $fetch_update['image']; ?>" alt="">
-                        <input type="text" name="update_name" value="<?php echo $fetch_update['name']; ?>" class="box" required placeholder="Enter Book Name">
-                        <input type="text" name="update_title" value="<?php echo $fetch_update['title']; ?>" class="box" required placeholder="Enter Author Name">
-                        <select name="update_category" value="<?php echo $fetch_update['category']; ?> required class=" text_field">
-                           <option value="Adventure">Adventure</option>
-                           <option value="Magic">Magic</option>
-                           <option value="knowledge">knowledge</option>
-                        </select>
-                        <input type="text" name="update_description" value="<?php echo $fetch_update['description']; ?>" class="box" required placeholder="enter product description">
-                        <input type="number" name="update_price" value="<?php echo $fetch_update['price']; ?>" min="0" class="box" required placeholder="enter product price">
-                        <input type="file" class="box" name="update_image" accept="image/jpg, image/jpeg, image/png">
-                        <input type="file" class="box" name="update_audio" accept="audio/mp3">
-                        <input type="submit" value="update" name="update_product" class="delete_btn">
-                        <input type="reset" value="cancel" id="close-update" class="update_btn">
-                     </form>
-            <?php
-                  }
-               }
-            } else {
-               echo '<script>document.querySelector(".edit-product-form").style.display = "none";</script>';
-            }
-            ?>
-      
-         </section>
-         <section class="show-products">
-      
-            <div class="box-container">
-      
-               <?php
-               $select_book = mysqli_query($conn, "SELECT * FROM book_info ORDER BY date DESC LIMIT 2;") or die('query failed');
-               if (mysqli_num_rows($select_book) > 0) {
-                  while ($fetch_book = mysqli_fetch_assoc($select_book)) {
-               ?>
-                     <div class="box">
-                        <img class="books_images" src="added_books/<?php echo $fetch_book['image']; ?>" alt="">
-                        <div class="name">Aurthor: <?php echo $fetch_book['title']; ?></div>
-                        <div class="name">Name: <?php echo $fetch_book['name']; ?></div>
-                        <div class="price">Price: <?php echo number_format($fetch_book['price'], 0, ',', '.'); ?> VND</div>
-                        <a href="add_books.php?update=<?php echo $fetch_book['bid']; ?>" class="update_btn">update</a>
-                        <a href="add_books.php?delete=<?php echo $fetch_book['bid']; ?>" class="delete_btn" onclick="return confirm('delete this product?');">delete</a>
-                     </div>
-               <?php
-                  }
-               } else {
-                  echo '<p class="empty">no products added yet!</p>';
-               }
-               ?>
-            </div>
-      
-         </section>
-      
-         <section class="edit-product-form">
-      
-            <?php
-            if (isset($_GET['update'])) {
-               $update_id = $_GET['update'];
-               $update_query = mysqli_query($conn, "SELECT * FROM `book_info` WHERE bid = '$update_id'") or die('query failed');
-               if (mysqli_num_rows($update_query) > 0) {
-                  while ($fetch_update = mysqli_fetch_assoc($update_query)) {
-            ?>
-                     <form action="" method="post" enctype="multipart/form-data">
-                        <input type="hidden" name="update_p_id" value="<?php echo $fetch_update['bid']; ?>">
-                        <input type="hidden" name="update_old_image" value="<?php echo $fetch_update['image']; ?>">
-                        <img src="./added_books/<?php echo $fetch_update['image']; ?>" alt="">
-                        <input type="text" name="update_name" value="<?php echo $fetch_update['name']; ?>" class="box" required placeholder="Enter Book Name">
-                        <input type="text" name="update_title" value="<?php echo $fetch_update['title']; ?>" class="box" required placeholder="Enter Author Name">
-                        <select name="update_category" value="<?php echo $fetch_update['category']; ?> required class=" text_field">
-                           <option value="Adventure">Adventure</option>
-                           <option value="Magic">Magic</option>
-                           <option value="knowledge">knowledge</option>
-                        </select>
-                        <input type="text" name="update_description" value="<?php echo $fetch_update['description']; ?>" class="box" required placeholder="enter product description">
-                        <input type="number" name="update_price" value="<?php echo $fetch_update['price']; ?>" min="0" class="box" required placeholder="enter product price">
-                        <input type="file" class="box" name="update_image" accept="image/jpg, image/jpeg, image/png">
-                        <input type="submit" value="update" name="update_product" class="delete_btn">
-                        <input type="reset" value="cancel" id="close-update" class="update_btn">
-                     </form>
-            <?php
-                  }
-               }
-            } else {
-               echo '<script>document.querySelector(".edit-product-form").style.display = "none";</script>';
-            }
-            ?>
-      
-         </section>
       </div>
    </div>
 

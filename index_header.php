@@ -102,11 +102,14 @@
       <div class="dropdown">
         <a href="#">Category</a>
         <div class="dropdown-content">
-          <a href="http://localhost/bookflix/index.php#New">Best book for you</a>
-          <a href="http://localhost/bookflix/index.php#Adventure">Adventure</a>
-          <a href="http://localhost/bookflix/index.php#Magical">Magic</a>
-          <a href="http://localhost/bookflix/index.php#Knowledge">Knowledge</a>
-
+          <?php
+            $listCate = $conn->query("SELECT * FROM `category` WHERE id_parent = 0");
+            while($one = $listCate->fetch_assoc()){
+          ?>
+          <a href="category.php?id=<?=$one['id_category']?>"><?=$one['name']?></a>
+          <?php
+            }
+          ?>
         </div>
       </div>
       <a href="contact-us.php">Contact US</a>

@@ -77,7 +77,7 @@ if(!isset($user_id)){
 <?php
    $select_orders = mysqli_query($conn, "SELECT * FROM `confirm_order`") or die('query failed');
 ?>
-<div class="container-order" style="height: calc(100vh - <?= $select_orders->num_rows == 0 ? '460px' : '430px'?>);">
+<div class="container-order">
    <?php
       if (mysqli_num_rows($select_orders) > 0) {
    ?>

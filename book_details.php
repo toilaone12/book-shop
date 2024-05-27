@@ -107,7 +107,7 @@ if (isset($_POST['add_to_cart'])) {
                                 <img src="./added_books/<?php echo $fetch_book['image']; ?>" alt="<?php echo $fetch_book['name']; ?>">
                             </div>
                             <div class="col_box">
-                                <h4>Author: <?php echo $fetch_book['title']; ?></h4>
+                                <h4>Author: <?php echo $fetch_book['author']; ?></h4>
                                 <h1>Name: <?php echo $fetch_book['name']; ?></h1>
                                 <h3>Book Details</h3>
                                 <p><?php echo $fetch_book['description']; ?></p>
