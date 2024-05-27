@@ -53,6 +53,7 @@ if (isset($_POST['update_product'])) {
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <link rel="stylesheet" href="./css/register.css">
    <link rel="stylesheet" href="./css/admin.css">
+   <link rel="stylesheet" href="./css/custom.css">
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
    <title>List Books</title>
 </head>
@@ -110,21 +111,29 @@ if (isset($_POST['update_product'])) {
          </section>
       
          <section class="show-products">
-            <div class="box-container">
-      
+            <div class="row">
                <?php
                $select_book = mysqli_query($conn, "SELECT * FROM `book_info` ORDER BY date DESC") or die('query failed');
                if (mysqli_num_rows($select_book) > 0) {
                   while ($fetch_book = mysqli_fetch_assoc($select_book)) {
                ?>
-                     <div class="box">
-                        <img class="books_images" src="added_books/<?php echo $fetch_book['image']; ?>" alt="">
-                        <div class="name">Aurthor: <?php echo $fetch_book['title']; ?></div>
-                        <div class="name">Name: <?php echo $fetch_book['name']; ?></div>
-                        <div class="price">Price: <?php echo number_format($fetch_book['price'], 0, ',', '.'); ?> VND</div>
-                        <a href="total_books.php?update=<?php echo $fetch_book['bid']; ?>" class="update_btn">update</a>
-                        <a href="total_books.php?delete=<?php echo $fetch_book['bid']; ?>" class="delete_btn" onclick="return confirm('delete this product?');">delete</a>
-                     </div>
+                  <div class="col-3 mb-20">
+                     <div class="box card-book">
+                        <div class="card-header-book">
+                           <img class="books_images image-book" src="added_books/<?php echo $fetch_book['image']; ?>" alt="">
+                        </div>
+                        <div class="card-body-book">
+                           <div class="name"> <?php echo $fetch_book['name']; ?></div>
+                           <div class="price price-font">Price: <?php echo number_format($fetch_book['price'], 0, ',', '.'); ?> VND</div>
+                           <div class="btn-hover-function">
+                              <div class="btn-function">
+                                 <a href="book_details.php?details=<?php echo $fetch_book['bid'].'&name='.$fetch_book['name']; ?>" class="update_btn btn-detail">View Details</a>
+                                 <button onclick="myFunction()" name="add_to_cart" class="btn-add-cart"><i class="fa-solid fa-cart-shopping"></i></button>
+                              </div>
+                           </div>
+                        </div>
+                    </div>
+                  </div>
                <?php
                   }
                } else {

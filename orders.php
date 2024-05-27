@@ -22,6 +22,12 @@ if(!isset($user_id)){
    <!-- font awesome cdn link  -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
    <link rel="stylesheet" href="./css/hello.css">
+   <link rel="stylesheet" href="./css/custom.css">
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
 <style>
     .placed-orders .title{
@@ -68,54 +74,51 @@ if(!isset($user_id)){
 <body>
    
 <?php include 'index_header.php'; ?>
-<section class="placed-orders">
-
-   <h1 class="title">placed orders</h1>
-
-   <div class="box-container">
-
+<?php
+   $select_orders = mysqli_query($conn, "SELECT * FROM `confirm_order`") or die('query failed');
+?>
+<div class="container-order" style="height: calc(100vh - <?= $select_orders->num_rows == 0 ? '460px' : '430px'?>);">
+   <?php
+      if (mysqli_num_rows($select_orders) > 0) {
+   ?>
+   <h1 class="title" style="text-align:center;margin:20px 0;font-size:39px;">My orders</h1>
+   <div class="row">
       <?php
-        $select_book = mysqli_query($conn, "SELECT * FROM `confirm_order`WHERE user_id = '$user_id' ORDER BY order_date DESC") or die('query failed');
-        if(mysqli_num_rows($select_book) > 0){
-            while($fetch_book = mysqli_fetch_assoc($select_book)){
+         while ($one = mysqli_fetch_assoc($select_orders)) {
       ?>
-      <div class="box">
-         <p> Order Date : <span><?php echo $fetch_book['order_date']; ?></span> </p>
-         <p> Order Id : <span># <?php echo $fetch_book['order_id']; ?> </p>
-         <p> Name : <span><?php echo $fetch_book['name']; ?></span> </p>
-         <p> Mobile Number : <span><?php echo $fetch_book['number']; ?></span> </p>
-         <p> Email Id : <span><?php echo $fetch_book['email']; ?></span> </p>
-         <p> Address : <span><?php echo $fetch_book['address']; ?></span> </p>
-         <p> Payment Method : <span><?php echo $fetch_book['payment_method']; ?></span> </p>
-         <p> Your orders : <span><?php echo $fetch_book['total_books']; ?></span> </p>
-         <p> Total price : <span> <?php echo $fetch_book['total_price']; ?> VND</span> </p>
-         <p> Payment status : <span style="color:<?php if($fetch_book['payment_status'] == 'pending'){ echo 'orange'; }else{ echo 'green'; } ?>;"><?php echo $fetch_book['payment_status']; ?></span> </p>
-         <p><a href="invoice.php?order_id=<?php echo $fetch_book['order_id']; ?>" target="_blank">Print Recipt</a></p>
-         </div>
-         <!-- <form action="" method="POST">
-         <input type="hidden" name="order_id" value="<?php echo $fetch_book['order_id']; ?>">
-         </form> -->
+            <div class="col-12 mb-20">
+               <div class="card-dashboard card-customer-order">
+                  <div class="card-icon-admin rounded-circle">
+                     <i class="fa-solid fa-box text-dark"></i>
+                  </div>
+                  <div class="card-body border-left-dark">
+                     <h5 class="card-title text-dark mr-10 price-font">Fullname: <?= $one['name'] ?></h5>
+                     <h5 class="card-title text-dark price-font">Phone Number: <?= $one['number'] ?></h5>
+                     <h6 class="card-title text-dark price-font">Address: <?= $one['address'] ?></h6>
+                     <h6 class="card-title text-dark price-font">Total Price: <?= number_format($one['total_price'],0,',','.')?> VND</h6>
+                     <h6 class="card-title text-dark price-font">Payment Type: <?= $one['payment_method']?></h6>
+                     <h6 class="card-title text-dark price-font">Payment Status: <span class="price-font <?= $one['payment_status'] == 'completed' ? 'text-success' : 'text-warning' ?>"><?=ucfirst($one['payment_status'])?></span></h6>
+                     <div class="buttons" style="display: flex;">
+                        <a href="detail_order_customer.php?id=<?= $one['order_id'] ?>" class="ml-0 btn btn-primary">View Detail</a>
+                     </div>
+                  </div>
+               </div>
+            </div>
       <?php
-       }
-      }else{
-         echo '<p class="empty">You have not placed any order yet!!!!</p>';
-      }
+         }
+      ?>
+      <?php
+         }else{
+      ?>
+      <h1 style="text-align: center; font-size: 32px; margin:20px 0;font-size:39px;"><i class="fa-solid fa-box text-dark" style="margin-right: 10px;"></i>No record order</h1>
+      <?php
+         }
       ?>
    </div>
-
-</section>
-
-
-
-
-
-
+</div>
 
 
 <?php include 'index_footer.php'; ?>
-
-<!-- custom js file link  -->
-<script src="js/script.js"></script>
 
 </body>
 </html>

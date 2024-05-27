@@ -14,7 +14,7 @@ if (isset($_POST['add_to_cart'])) {
         $book_image = $_POST['book_image'];
         $book_price = $_POST['book_price'];
         $book_quantity = $_POST['quantity'];
-        $total_price = number_format($book_price * $book_quantity);
+        $total_price = $book_price * $book_quantity;
         $select_book = $conn->query("SELECT * FROM cart WHERE name= '$book_name' AND user_id='$user_id' ") or die('query failed');
 
         if (mysqli_num_rows($select_book) > 0) {
@@ -37,7 +37,10 @@ if (isset($_POST['add_to_cart'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/index_book.css">
     <link rel="stylesheet" href="./css/hello.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <title>Selected Products</title>
 
@@ -116,7 +119,7 @@ if (isset($_POST['add_to_cart'])) {
                                     </audio>
                                     <!-- <audio src="./audio_books/<?= $fetch_book['audio'] ?>"></audio> -->
                                 </div>
-                                <h3>Price: <?php echo number_format($fetch_book['price'], 0, ',', '.'); ?>VND</h3>
+                                <h3 class="price-font">Price: <?php echo number_format($fetch_book['price'], 0, ',', '.'); ?>VND</h3>
                                 <label for="quantity">Quantity:</label>
                                 <input type="number" name="quantity" value="1" min="1" max="10" id="quantity">
                                 <div class="buttons">

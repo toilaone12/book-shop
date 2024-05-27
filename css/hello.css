@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap");
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lalezar&display=swap');
 
 * {
   text-decoration: none;
@@ -25,8 +26,6 @@ header {
   position: sticky;
   z-index: 1000;
   box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
-
-
 }
 
 .logo a {
@@ -39,6 +38,7 @@ header {
   font-weight: bold;
   padding-right: 5px;
   font-size: 40px;
+  line-height: 60px;
 }
 
 .logo a .me {
@@ -178,7 +178,7 @@ section .banner {
 
 .show-products .box-container .box .price {
   margin: 10px 0;
-  font-size: 17px;
+  font-size: 20px;
   color: #f35516;
   font-weight: 400;
 }
@@ -272,6 +272,7 @@ section .banner {
 /* css for Cart Page */
 .cart_form {
   margin: 20px auto;
+  overflow: auto;
 }
 
 .cart_form table {
@@ -316,8 +317,9 @@ section .banner {
 }
 
 .cart_form table tr td input {
-  width: 40px;
-  height: 30px;
+  width: 50px;
+  height: 50px;
+  font-size: 18px;
   padding: 5px;
 }
 
@@ -516,6 +518,54 @@ header .nav .dropdown:hover .dropdown-content {
   border: 2px solid rgb(68, 203, 236);
   border-top-right-radius: 8px;
   border-bottom-left-radius: 8px;
+}
+
+a:hover {
+  text-decoration: none !important;
+}
+
+.no-cart {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.no-cart a {
+  color:#007AF5;
+  cursor: pointer;
+}
+
+.text-white {
+  color: #fff !important;
+}
+
+.mt-20 {
+  margin-top: 20px;
+}
+
+.mr-10 {
+  margin-right: 10px;
+}
+
+
+.btn-cart-update {
+  background-color: #007AF5;
+}
+
+
+.btn-cart-delete {
+  background-color: #FF0000;
+}
+
+.btn-cart-update i,
+.btn-cart-delete i{
+  color: #fff;
+  font-size: 18px;
+}
+
+.price-font {
+  font-family: "Lalezar", system-ui;
+  font-weight: 400;
+  font-style: normal;
 }
 
 /* **********************************ORDER PAGE*********************************** */

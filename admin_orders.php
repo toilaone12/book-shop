@@ -60,7 +60,54 @@ if (isset($_GET['delete'])) {
       }
       ?>
       <div class="container-admin">
-         <section class="placed-orders">
+         <h1 class="title mb-20">List User</h1>
+         <?php
+         $message = isset($_SESSION['message']) ? $_SESSION['message'] : '';
+         if ($message) {
+            echo $message;
+            $_SESSION['message'] = '';
+         }
+         $select_orders = mysqli_query($conn, "SELECT * FROM `confirm_order`") or die('query failed');
+         if (mysqli_num_rows($select_orders) > 0) {
+         ?>
+            <div class="row">
+               <?php
+               while ($one = mysqli_fetch_assoc($select_orders)) {
+               ?>
+                  <div class="col-12 mb-20">
+                     <div class="card-dashboard card-user-admin">
+                        <div class="card-icon-admin rounded-circle">
+                           <i class="fa-solid fa-box text-dark"></i>
+                        </div>
+                        <div class="card-body border-left-dark">
+                           <div class="d-flex align-items-center">
+                              <h6 class="card-title text-dark mr-10 price-font">Fullname: <?= $one['name'] ?></h6>
+                              <h6 class="card-title text-dark price-font">Phone Number: <?= $one['number'] ?></h6>
+                           </div>
+                           <h6 class="card-title text-dark price-font">Address: <?= $one['address'] ?></h6>
+                           <div class="d-flex align-items-center">
+                              <h6 class="card-title text-dark price-font mr-10">Total Price: <?= number_format($one['total_price'], 0, ',', '.') ?> VND</h6>
+                              <h6 class="card-title text-dark price-font">Payment Type: <?= $one['payment_method'] ?></h6>
+                           </div>
+                           <h6 class="card-title text-dark price-font">Payment Status: <span class="price-font <?= $one['payment_status'] == 'completed' ? 'text-success' : 'text-warning' ?>"><?= ucfirst($one['payment_status']) ?></span></h6>
+                           <div class="buttons" style="display: flex;">
+                              <a href="detail_order.php?id=<?= $one['order_id'] ?>" class="ml-0 btn btn-primary">View Detail</a>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               <?php
+               }
+               ?>
+            <?php
+         } else {
+            ?>
+               <div style="text-align: center; font-size: 32px;"><i class="fa-solid fa-box text-dark" style="margin-right: 10px;"></i>No record order</div>
+            <?php
+         }
+            ?>
+            </div>
+            <!-- <section class="placed-orders">
       
             <h1 class="order-title">Order</h1>
       
@@ -108,9 +155,9 @@ if (isset($_GET['delete'])) {
                ?>
             </div>
       
-         </section>
+         </section> -->
       </div>
-      </div>
+   </div>
 
 
 

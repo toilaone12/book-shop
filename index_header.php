@@ -97,10 +97,10 @@
       <a href="index.php"><span>MuseBook &</span>
         <span class="me">Chill</span></a>
     </div>
-    <div class="nav">
+    <div class="nav align-items-center">
       <a href="index.php">Home</a>
       <div class="dropdown">
-        <a>Category</a>
+        <a href="#">Category</a>
         <div class="dropdown-content">
           <a href="http://localhost/bookflix/index.php#New">Best book for you</a>
           <a href="http://localhost/bookflix/index.php#Adventure">Adventure</a>

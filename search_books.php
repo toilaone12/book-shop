@@ -13,15 +13,15 @@ if (isset($_POST['add_to_cart'])) {
    $book_price = $_POST['book_price'];
    $book_quantity = '1';
 
-   $total_price = number_format($book_price * $book_quantity);
-   $select_book = $conn->query("SELECT * FROM cart WHERE bid= '$book_id' AND user_id='$user_id' ") or die('query failed');
+   $total_price = $book_price * $book_quantity;
+   $select_book = $conn->query("SELECT * FROM cart WHERE book_id=$book_id AND user_id=$user_id") or die('query failed');
 
    if (mysqli_num_rows($select_book) > 0) {
-       $message[] = 'This Book is alredy in your cart';
+      $message[] = 'This Book is alredy in your cart';
    } else {
-   $conn->query("INSERT INTO cart (`user_id`,`book_id`,`name`, `price`, `image`,`quantity` ,`total`) VALUES('$user_id','$book_id','$book_name','$book_price','$book_image','$book_quantity', '$total_price')") or die('Add to cart Query failed');
-   $message[] = 'Book Added To Successfully';
-   header('location:index.php');
+      $conn->query("INSERT INTO cart (`user_id`,`book_id`,`name`, `price`, `image`,`quantity` ,`total`) VALUES('$user_id','$book_id','$book_name','$book_price','$book_image','$book_quantity', '$total_price')") or die('Add to cart Query failed');
+      $message[] = 'Book Added To Successfully';
+      header('location: cart.php');
    }
 }
 }
@@ -34,13 +34,30 @@ if (isset($_POST['add_to_cart'])) {
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>search page</title>
+   <title>Search Book</title>
 
    <!-- font awesome cdn link  -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 
    <!-- custom css file link  -->
-   <link rel="stylesheet" href="css/style.css">
+   <link rel="stylesheet" href="css/hello.css">
+   <link rel="stylesheet" href="css/custom.css">
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+   <?php
+   if (isset($message)) {
+      foreach ($message as $mess) {
+         echo "<script>$(document).ready(function() {
+            toastr.success('".$mess."', 'Warning');
+         })</script>";
+      }
+   }
+   ?>
    <style>
       .search-form form {
          max-width: 1200px;
@@ -59,7 +76,7 @@ if (isset($_POST['add_to_cart'])) {
          border: 2px solid rgb(0, 167, 245);
          font-size: 20px;
          color: black;
-         border-radius: 5px;
+         border-radius: 30px;
       }
 
       .search_btn {
@@ -82,24 +99,24 @@ if (isset($_POST['add_to_cart'])) {
    <section class="search-form">
 
       <form action="" method="POST">
-         <input type="text" class="box" name="search_box" placeholder="search products...">
+         <input type="text" class="box" name="search_box" placeholder="John Wick">
          <input type="submit" name="search_btn" value="search" class="search_btn">
       </form>
 
    </section>
-
-   <div class="msg">
-      <?php
-      if (isset($_POST['search_btn'])) {
-         $search_box = $_POST['search_box'];
-         
-         echo '<h4>Search Result for "'. $search_box.'"is:</h4>';
-      };
-      ?>
+   <div class="container-order">
+      <div class="msg">
+         <?php
+         if (isset($_POST['search_btn'])) {
+            $search_box = $_POST['search_box'];
+            
+            echo '<h4>Search Result for "'. $search_box.'"</h4>';
+         };
+         ?>
+      </div>
    </div>
    <section class="show-products">
       <div class="box-container">
-
          <?php
          if (isset($_POST['search_btn'])) {
             $search_box = $_POST['search_box'];
@@ -109,25 +126,30 @@ if (isset($_POST['add_to_cart'])) {
             if (mysqli_num_rows($select_products) > 0) {
                while ($fetch_book = mysqli_fetch_assoc($select_products)) {
          ?>
-
-                  <div class="box" style="width: 255px;height: 342px;">
-                     <a href="book_details.php?details=<?php echo $fetch_book['bid'];
-                                                         echo '-name=', $fetch_book['name']; ?>"> <img style="height: 200px;width: 125px;margin: auto;" class="books_images" src="added_books/<?php echo $fetch_book['image']; ?>" alt=""></a>
-                     <div style="text-align:left ;">
-                        <div class="name" style="font-size: 12px;">Aurthor: <?php echo $fetch_book['title']; ?></div>
-                        <div style="font-weight: 500; font-size:18px; " class="name">Name: <?php echo $fetch_book['name']; ?></div>
+            <div class="box card-book">
+               <div class="card-header-book">
+                     <a href="book_details.php?details=<?php echo $fetch_book['bid'].'&name='.$fetch_book['name']; ?>"> 
+                        <img class="books_images image-book" src="added_books/<?php echo $fetch_book['image']; ?>" alt="">
+                     </a>
+               </div>
+               <div class="card-body-book">
+                     <div style="text-align:left;">
+                        <div class="name"> <?php echo $fetch_book['name']; ?></div>
                      </div>
-                     <div class="price">Price: VND <?php echo $fetch_book['price']; ?>/-</div>
+                     <div class="price price-font">Price: <?php echo number_format($fetch_book['price'], 0, ',', '.'); ?> VND</div>
                      <!-- <button name="add_cart"><img src="./images/cart2.png" alt=""></button> -->
                      <form action="" method="POST">
                         <input class="hidden_input" type="hidden" name="book_name" value="<?php echo $fetch_book['name'] ?>">
+                        <input class="hidden_input" type="hidden" name="book_id" value="<?php echo $fetch_book['bid'] ?>">
                         <input class="hidden_input" type="hidden" name="book_image" value="<?php echo $fetch_book['image'] ?>">
                         <input class="hidden_input" type="hidden" name="book_price" value="<?php echo $fetch_book['price'] ?>">
-                        <button onclick="myFunction()" name="add_to_cart"><img src="./images/cart2.png" alt="Add to cart">
-                           <a href="book_details.php?details=<?php echo $fetch_book['bid'];
-                                                               echo '-name=', $fetch_book['name']; ?>" id="adventure" class="update_btn">Read >></a>
+                        <div class="btn-function">
+                           <a href="book_details.php?details=<?php echo $fetch_book['bid'].'&name='.$fetch_book['name']; ?>" class="update_btn btn-detail">View Details</a>
+                           <button onclick="myFunction()" name="add_to_cart" class="btn-add-cart"><i class="fa-solid fa-cart-shopping"></i></button>
+                        </div>
                      </form>
-                  </div>
+               </div>
+            </div>
          <?php
                }
             } else {
@@ -137,10 +159,6 @@ if (isset($_POST['add_to_cart'])) {
          ?>
       </div>
    </section>
-
-
-
-
    <?php include 'index_footer.php'; ?>
 
    <script src="js/script.js"></script>
